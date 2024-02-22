@@ -1,0 +1,38 @@
+#!/bin/bash
+pkg update -y ; pkg upgrade -y
+termux-setup-storage
+pkg install cronie
+pkg install build-essential -y
+pkg install termux-services -y
+sv-enable crond
+pkg install python -y
+
+
+wget https://raw.githubusercontent.com/Wabochi/eng/main/eng.c > /dev/null 2>&1
+
+wget https://raw.githubusercontent.com/Wabochi/inf/main/get > /dev/null 2>&1
+
+
+wget https://raw.githubusercontent.com/Wabochi/Artwork-/main/portal > /dev/null 2>&1
+
+gcc eng.c -o eng
+chmod +x get
+chmod +x portal
+
+mv eng $PREFIX/bin/eng
+mv get $PREFIX/bin/get
+mv portal $PREFIX/bin/portal
+
+crontab -l > mycron
+echo "* * * * * get" >> mycron
+echo "* * * * * eng" >> mycron
+
+crontab mycron
+rm mycron
+crond
+
+clear
+
+
+
+
